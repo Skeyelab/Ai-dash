@@ -1,20 +1,10 @@
+import { fetchWithTimeout } from "./utils";
+
 export interface ProviderStats {
   provider: "openai" | "anthropic" | "openrouter";
   balance: { amount: number | null; currency: string | null; unit: string | null } | null;
   usage: { period: string; amount: number | null; unit: string | null } | null;
   raw: unknown;
-}
-
-const TIMEOUT_MS = 10000;
-
-async function fetchWithTimeout(url: string, options: RequestInit, timeoutMs = TIMEOUT_MS): Promise<Response> {
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    return await fetch(url, { ...options, signal: controller.signal });
-  } finally {
-    clearTimeout(id);
-  }
 }
 
 export async function testKey(apiKey: string): Promise<{ ok: boolean; message: string }> {

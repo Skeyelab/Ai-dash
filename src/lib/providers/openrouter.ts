@@ -1,16 +1,5 @@
 import type { ProviderStats } from "./openai";
-
-const TIMEOUT_MS = 10000;
-
-async function fetchWithTimeout(url: string, options: RequestInit, timeoutMs = TIMEOUT_MS): Promise<Response> {
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    return await fetch(url, { ...options, signal: controller.signal });
-  } finally {
-    clearTimeout(id);
-  }
-}
+import { fetchWithTimeout } from "./utils";
 
 export async function testKey(apiKey: string): Promise<{ ok: boolean; message: string }> {
   try {

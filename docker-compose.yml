@@ -27,7 +27,7 @@ services:
     environment:
       DATABASE_URL: postgresql://aidash:aidash_secret@postgres:5432/aidash
       BASIC_AUTH_USER: admin
-      BASIC_AUTH_PASS: changeme
+      BASIC_AUTH_PASS: "REPLACE_WITH_STRONG_PASSWORD"
       ENCRYPTION_KEY: "REPLACE_WITH_32_BYTES_BASE64_ENCODED_KEY"
       NODE_ENV: production
     depends_on:

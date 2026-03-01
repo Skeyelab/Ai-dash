@@ -173,9 +173,21 @@ export function DashboardClient({ providers, recentSnapshots }: Props) {
 
   async function handleRefreshAll() {
     setRefreshing({ openai: true, anthropic: true, openrouter: true });
-    await refreshAllAction();
+    const results = await refreshAllAction();
     setRefreshing({});
-    toast.success("All providers refreshed");
+
+    let hasError = false;
+    for (const result of results ?? []) {
+      const provider = "provider" in result ? (result.provider as Provider) : undefined;
+      if ("error" in result && result.error) {
+        hasError = true;
+        const providerName = provider ? PROVIDER_NAMES[provider] : "Provider";
+        toast.error(`${providerName}: ${result.error}`);
+      }
+    }
+    if (!hasError) {
+      toast.success("All providers refreshed");
+    }
     router.refresh();
   }
 
