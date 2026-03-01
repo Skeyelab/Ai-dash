@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Provider {
+  openai
+  anthropic
+  openrouter
+}
+
+enum SnapshotStatus {
+  ok
+  error
+}
+
+model ProviderCredential {
+  id              String   @id @default(uuid())
+  provider        Provider @unique
+  encryptedApiKey String   @map("encrypted_api_key")
+  keyHint         String   @map("key_hint")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("provider_credentials")
+}
+
+model ProviderSnapshot {
+  id           String         @id @default(uuid())
+  provider     Provider
+  fetchedAt    DateTime       @default(now()) @map("fetched_at")
+  status       SnapshotStatus
+  payloadJson  Json?          @map("payload_json")
+  errorMessage String?        @map("error_message")
+
+  @@map("provider_snapshots")
+}
