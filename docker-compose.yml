@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: aidash
+      POSTGRES_PASSWORD: aidash_secret
+      POSTGRES_DB: aidash
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aidash"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://aidash:aidash_secret@postgres:5432/aidash
+      BASIC_AUTH_USER: admin
+      BASIC_AUTH_PASS: "REPLACE_WITH_STRONG_PASSWORD"
+      ENCRYPTION_KEY: "REPLACE_WITH_32_BYTES_BASE64_ENCODED_KEY"
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
