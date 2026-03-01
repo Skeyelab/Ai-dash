@@ -12,7 +12,7 @@ A single-user dashboard for managing and monitoring AI provider API keys (OpenAI
 
 ## Tech Stack
 
-- Next.js 14 (App Router), TypeScript
+- Next.js 15 (App Router), TypeScript
 - Tailwind CSS + shadcn/ui components
 - PostgreSQL + Prisma ORM
 - Zod for validation
